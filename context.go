@@ -1,3 +1,4 @@
+//go:build go1.7
 // +build go1.7
 
 package nosurf
@@ -50,7 +51,7 @@ func ctxClear(_ *http.Request) {
 
 func ctxSetToken(req *http.Request, token []byte) {
 	ctx := req.Context().Value(nosurfKey).(*csrfContext)
-	ctx.token = b64encode(maskToken(token))
+	ctx.token = encodeData(maskToken(token))
 }
 
 func ctxSetReason(req *http.Request, reason error) {

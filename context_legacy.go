@@ -1,3 +1,4 @@
+//go:build !go1.7
 // +build !go1.7
 
 package nosurf
@@ -74,7 +75,7 @@ func ctxSetToken(req *http.Request, token []byte) *http.Request {
 		contextMap[req] = ctx
 	}
 
-	ctx.token = b64encode(maskToken(token))
+	ctx.token = encodeData(maskToken(token))
 
 	return req
 }

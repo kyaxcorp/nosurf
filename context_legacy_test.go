@@ -1,3 +1,4 @@
+//go:build !go1.7
 // +build !go1.7
 
 package nosurf
@@ -45,7 +46,7 @@ func TestSetsTokenCorrectly(t *testing.T) {
 
 	got := contextMap[req].token
 
-	if !bytes.Equal(token, unmaskToken(b64decode(got))) {
+	if !bytes.Equal(token, unmaskToken(decodeData(got))) {
 		t.Errorf("Token set incorrectly: expected %v, got %v", token, got)
 	}
 }
@@ -62,7 +63,7 @@ func TestGetsTokenCorrectly(t *testing.T) {
 	ctxSetToken(req, intended)
 
 	token = Token(req)
-	decToken := unmaskToken(b64decode(token))
+	decToken := unmaskToken(decodeData(token))
 	if !bytes.Equal(intended, decToken) {
 		t.Errorf("Token has been set to %v, but it's %v", intended, token)
 	}

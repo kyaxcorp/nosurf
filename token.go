@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"math/big"
 )
 
 const (
@@ -41,12 +42,30 @@ func generateToken() []byte {
 	return bytes
 }
 
-func b64encode(data []byte) string {
-	return base64.StdEncoding.EncodeToString(data)
+func encodeData(data []byte) string {
+	//return base64.StdEncoding.EncodeToString(data)
+	// Removed because symbols like "+" make problems?!
+	return encodeToBase62(data)
 }
 
-func b64decode(data string) []byte {
-	decoded, err := base64.StdEncoding.DecodeString(data)
+func encodeToBase62(data []byte) string {
+	var bigInt big.Int
+	bigInt.SetBytes(data)
+	return bigInt.Text(62)
+}
+
+func decodeFromBase62(encoded string) ([]byte, error) {
+	var bigInt big.Int
+	_, ok := bigInt.SetString(encoded, 62)
+	if !ok {
+		return nil, fmt.Errorf("invalid base62 string: %s", encoded)
+	}
+	return bigInt.Bytes(), nil
+}
+
+func decodeData(data string) []byte {
+	decoded, err := decodeFromBase62(data)
+	//decoded, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
 		return nil
 	}

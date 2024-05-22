@@ -83,7 +83,7 @@ func extractToken(r *http.Request) []byte {
 		}
 	}
 
-	return b64decode(sentToken)
+	return decodeData(sentToken)
 }
 
 // Constructs a new CSRFHandler that calls
@@ -122,7 +122,7 @@ func (h *CSRFHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	tokenCookie, err := r.Cookie(h.getCookieName())
 	if err == nil {
-		realToken = b64decode(tokenCookie.Value)
+		realToken = decodeData(tokenCookie.Value)
 	}
 
 	// If the length of the real token isn't what it should be,
@@ -207,7 +207,7 @@ func (h *CSRFHandler) setTokenCookie(w http.ResponseWriter, r *http.Request, tok
 
 	cookie := h.baseCookie
 	cookie.Name = h.getCookieName()
-	cookie.Value = b64encode(token)
+	cookie.Value = encodeData(token)
 
 	http.SetCookie(w, &cookie)
 
