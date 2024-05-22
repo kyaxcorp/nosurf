@@ -5,6 +5,7 @@ import (
 	"crypto/subtle"
 	"fmt"
 	"io"
+	"log"
 	"math/big"
 )
 
@@ -93,6 +94,40 @@ func VerifyToken(realToken, sentToken string) bool {
 		s = unmaskToken(s)
 	}
 	return tokensEqual(r, s)
+
+}
+
+// VerifyToken verifies the sent token equals the real one
+// and returns a bool value indicating if tokens are equal.
+// Supports masked tokens. realToken comes from Token(r) and
+// sentToken is token sent unusual way.
+func VerifyTokenDebug(realToken, sentToken string) bool {
+	log.Println("realToken", realToken)
+	log.Println("sentToken", sentToken)
+	//r, err := base64.StdEncoding.DecodeString(realToken)
+	r, err := decodeFromBase62(realToken)
+	if err != nil {
+		return false
+	}
+	log.Println("decoded realToken", realToken, err)
+
+	if len(r) == 2*tokenLength {
+		r = unmaskToken(r)
+		log.Println("unmasked realToken", r)
+	}
+	//s, err := base64.StdEncoding.DecodeString(sentToken)
+	s, err := decodeFromBase62(sentToken)
+	if err != nil {
+		return false
+	}
+	log.Println("decoded sentToken", sentToken, err)
+
+	if len(s) == 2*tokenLength {
+		s = unmaskToken(s)
+		log.Println("unmasked sentToken", s)
+	}
+	return tokensEqual(r, s)
+
 }
 
 // verifyToken expects the realToken to be unmasked and the sentToken to be masked
