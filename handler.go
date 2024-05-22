@@ -4,7 +4,6 @@ package nosurf
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -197,7 +196,7 @@ func (h *CSRFHandler) handleFailure(w http.ResponseWriter, r *http.Request) {
 // Generates a new token, sets it on the given request and returns it
 func (h *CSRFHandler) RegenerateToken(w http.ResponseWriter, r *http.Request) string {
 	token := generateToken()
-	log.Println("generate Token", len(token), token)
+	//log.Println("generate Token", len(token), token)
 	h.setTokenCookie(w, r, token)
 
 	return Token(r)
@@ -209,7 +208,7 @@ func (h *CSRFHandler) setTokenCookie(w http.ResponseWriter, r *http.Request, tok
 
 	cookie := h.baseCookie
 	cookie.Name = h.getCookieName()
-	log.Println("setTokenCookie", token, EncodeData(token), len(EncodeData(token)))
+	//log.Println("setTokenCookie", token, EncodeData(token), len(EncodeData(token)))
 	cookie.Value = EncodeData(maskToken(token))
 
 	http.SetCookie(w, &cookie)

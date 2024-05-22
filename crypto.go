@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"io"
-	"log"
 )
 
 const (
@@ -35,7 +34,7 @@ func oneTimePad(data, key []byte) {
 // with the given key
 // Slices must be of the same length, or oneTimePad will panic
 func maskToken(data []byte) []byte {
-	log.Println("maskToken start", len(data), data)
+	//log.Println("maskToken start", len(data), data)
 	if len(data) != tokenLength {
 		return nil
 	}
@@ -47,17 +46,17 @@ func maskToken(data []byte) []byte {
 	if _, err := io.ReadFull(rand.Reader, result[:tokenLength]); err != nil {
 		panic(err)
 	}
-	log.Println("maskToken oneTimePad", len(result[tokenLength:]), result[tokenLength:], len(key), key)
+	//log.Println("maskToken oneTimePad", len(result[tokenLength:]), result[tokenLength:], len(key), key)
 
 	oneTimePad(result[tokenLength:], key)
-	log.Println("maskToken result", len(result), result)
+	//log.Println("maskToken result", len(result), result)
 
 	return result
 }
 
 // unmaskToken unmasks a token using a password.
 func unmaskToken(data []byte) []byte {
-	log.Println("unmaskToken start", len(data), data)
+	//log.Println("unmaskToken start", len(data), data)
 
 	if len(data) != tokenLength*2 {
 		return nil
@@ -65,9 +64,9 @@ func unmaskToken(data []byte) []byte {
 
 	key := deriveKeyFromPassword(MaskPassword)
 	token := data[tokenLength:]
-	log.Println("unmaskToken token", len(token), token)
+	//log.Println("unmaskToken token", len(token), token)
 	oneTimePad(token, key)
-	log.Println("unmaskToken end", len(token), token)
+	//log.Println("unmaskToken end", len(token), token)
 
 	return token
 }
