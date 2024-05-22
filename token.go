@@ -97,7 +97,7 @@ func VerifyToken(realToken, sentToken string) bool {
 
 }
 
-// VerifyToken verifies the sent token equals the real one
+// VerifyTokenDebug verifies the sent token equals the real one
 // and returns a bool value indicating if tokens are equal.
 // Supports masked tokens. realToken comes from Token(r) and
 // sentToken is token sent unusual way.
@@ -111,10 +111,10 @@ func VerifyTokenDebug(realToken, sentToken string) bool {
 	}
 	log.Println("decoded realToken", realToken, err)
 
-	if len(r) == 2*tokenLength {
-		r = unmaskToken(r)
-		log.Println("unmasked realToken", r)
-	}
+	//if len(r) == 2*tokenLength {
+	r = unmaskToken(r)
+	log.Println("unmasked realToken", r)
+	//}
 	//s, err := base64.StdEncoding.DecodeString(sentToken)
 	s, err := decodeFromBase62(sentToken)
 	if err != nil {
@@ -122,10 +122,10 @@ func VerifyTokenDebug(realToken, sentToken string) bool {
 	}
 	log.Println("decoded sentToken", sentToken, err)
 
-	if len(s) == 2*tokenLength {
-		s = unmaskToken(s)
-		log.Println("unmasked sentToken", s)
-	}
+	//if len(s) == 2*tokenLength {
+	s = unmaskToken(s)
+	log.Println("unmasked sentToken", s)
+	//}
 	return tokensEqual(r, s)
 
 }
