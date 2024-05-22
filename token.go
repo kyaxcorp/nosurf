@@ -109,22 +109,22 @@ func VerifyTokenDebug(realToken, sentToken string) bool {
 	if err != nil {
 		return false
 	}
-	log.Println("decoded realToken", realToken, err)
+	log.Println("decoded realToken", realToken, len(r), r, err)
 
 	//if len(r) == 2*tokenLength {
 	r = unmaskToken(r)
-	log.Println("unmasked realToken", r)
+	log.Println("unmasked realToken", len(r), r)
 	//}
 	//s, err := base64.StdEncoding.DecodeString(sentToken)
 	s, err := decodeFromBase62(sentToken)
 	if err != nil {
 		return false
 	}
-	log.Println("decoded sentToken", sentToken, err)
+	log.Println("decoded sentToken", sentToken, len(s), s, err)
 
 	//if len(s) == 2*tokenLength {
 	s = unmaskToken(s)
-	log.Println("unmasked sentToken", s)
+	log.Println("unmasked sentToken", len(s), s)
 	//}
 	return tokensEqual(r, s)
 
