@@ -3,7 +3,6 @@ package nosurf
 import (
 	"crypto/rand"
 	"crypto/subtle"
-	"encoding/base64"
 	"fmt"
 	"io"
 	"math/big"
@@ -77,14 +76,16 @@ func decodeData(data string) []byte {
 // Supports masked tokens. realToken comes from Token(r) and
 // sentToken is token sent unusual way.
 func VerifyToken(realToken, sentToken string) bool {
-	r, err := base64.StdEncoding.DecodeString(realToken)
+	//r, err := base64.StdEncoding.DecodeString(realToken)
+	r, err := decodeFromBase62(realToken)
 	if err != nil {
 		return false
 	}
 	if len(r) == 2*tokenLength {
 		r = unmaskToken(r)
 	}
-	s, err := base64.StdEncoding.DecodeString(sentToken)
+	//s, err := base64.StdEncoding.DecodeString(sentToken)
+	s, err := decodeFromBase62(sentToken)
 	if err != nil {
 		return false
 	}
