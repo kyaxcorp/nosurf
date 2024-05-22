@@ -1,3 +1,3 @@
-module github.com/justinas/nosurf
+module github.com/kyaxcorp/nosurf
 
 go 1.12
