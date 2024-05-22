@@ -2,12 +2,23 @@ package nosurf
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"io"
 )
 
-// Masks/unmasks the given data *in place*
-// with the given key
-// Slices must be of the same length, or oneTimePad will panic
+const (
+	keyLength = 32 // Length of the derived key from the password
+)
+
+var MaskPassword = []byte("yoursuperpasswordhere!")
+
+// DeriveKeyFromPassword derives a key from the provided password.
+func deriveKeyFromPassword(password []byte) []byte {
+	hashed := sha256.Sum256(password)
+	return hashed[:]
+}
+
+// oneTimePad encrypts/decrypts the data using the given key.
 func oneTimePad(data, key []byte) {
 	n := len(data)
 	if n != len(key) {
@@ -19,34 +30,33 @@ func oneTimePad(data, key []byte) {
 	}
 }
 
+// Masks/unmasks the given data *in place*
+// with the given key
+// Slices must be of the same length, or oneTimePad will panic
 func maskToken(data []byte) []byte {
 	if len(data) != tokenLength {
 		return nil
 	}
 
-	// tokenLength*2 == len(enckey + token)
+	key := deriveKeyFromPassword(MaskPassword)
 	result := make([]byte, 2*tokenLength)
-	// the first half of the result is the OTP
-	// the second half is the masked token itself
-	key := result[:tokenLength]
-	token := result[tokenLength:]
-	copy(token, data)
+	copy(result[tokenLength:], data)
 
-	// generate the random token
-	if _, err := io.ReadFull(rand.Reader, key); err != nil {
+	if _, err := io.ReadFull(rand.Reader, result[:tokenLength]); err != nil {
 		panic(err)
 	}
 
-	oneTimePad(token, key)
+	oneTimePad(result[tokenLength:], key)
 	return result
 }
 
+// unmaskToken unmasks a token using a password.
 func unmaskToken(data []byte) []byte {
 	if len(data) != tokenLength*2 {
 		return nil
 	}
 
-	key := data[:tokenLength]
+	key := deriveKeyFromPassword(MaskPassword)
 	token := data[tokenLength:]
 	oneTimePad(token, key)
 
