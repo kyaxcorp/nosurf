@@ -42,7 +42,7 @@ func generateToken() []byte {
 	return bytes
 }
 
-func encodeData(data []byte) string {
+func EncodeData(data []byte) string {
 	//return base64.StdEncoding.EncodeToString(data)
 	// Removed because symbols like "+" make problems?!
 	return encodeToBase62(data)
@@ -63,7 +63,7 @@ func decodeFromBase62(encoded string) ([]byte, error) {
 	return bigInt.Bytes(), nil
 }
 
-func decodeData(data string) []byte {
+func DecodeData(data string) []byte {
 	decoded, err := decodeFromBase62(data)
 	//decoded, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {

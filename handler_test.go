@@ -104,7 +104,7 @@ func TestManualVerify(t *testing.T) {
 		t.Fatal("Cookie was not found in the response.")
 	}
 
-	// finalToken := encodeData(maskToken(decodeData(cookie.Value)))
+	// finalToken := EncodeData(maskToken(DecodeData(cookie.Value)))
 
 	vals := [][]string{
 		{"name", "Jolene"},
@@ -298,7 +298,7 @@ func TestCorrectTokenPasses(t *testing.T) {
 		t.Fatal("Cookie was not found in the response.")
 	}
 
-	finalToken := encodeData(maskToken(decodeData(cookie.Value)))
+	finalToken := EncodeData(maskToken(DecodeData(cookie.Value)))
 
 	vals := [][]string{
 		{"name", "Jolene"},
@@ -394,7 +394,7 @@ func TestPrefersHeaderOverFormValue(t *testing.T) {
 		t.Fatal("Cookie was not found in the response.")
 	}
 
-	finalToken := encodeData(maskToken(decodeData(cookie.Value)))
+	finalToken := EncodeData(maskToken(DecodeData(cookie.Value)))
 
 	vals := [][]string{
 		{"name", "Jolene"},

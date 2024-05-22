@@ -4,6 +4,7 @@ package nosurf
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -83,7 +84,7 @@ func extractToken(r *http.Request) []byte {
 		}
 	}
 
-	return decodeData(sentToken)
+	return DecodeData(sentToken)
 }
 
 // Constructs a new CSRFHandler that calls
@@ -122,7 +123,7 @@ func (h *CSRFHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	tokenCookie, err := r.Cookie(h.getCookieName())
 	if err == nil {
-		realToken = decodeData(tokenCookie.Value)
+		realToken = DecodeData(tokenCookie.Value)
 	}
 
 	// If the length of the real token isn't what it should be,
@@ -196,6 +197,7 @@ func (h *CSRFHandler) handleFailure(w http.ResponseWriter, r *http.Request) {
 // Generates a new token, sets it on the given request and returns it
 func (h *CSRFHandler) RegenerateToken(w http.ResponseWriter, r *http.Request) string {
 	token := generateToken()
+	log.Println("generate Token", len(token), token)
 	h.setTokenCookie(w, r, token)
 
 	return Token(r)
@@ -207,7 +209,8 @@ func (h *CSRFHandler) setTokenCookie(w http.ResponseWriter, r *http.Request, tok
 
 	cookie := h.baseCookie
 	cookie.Name = h.getCookieName()
-	cookie.Value = encodeData(token)
+	log.Println("setTokenCookie", token, EncodeData(token), len(EncodeData(token)))
+	cookie.Value = EncodeData(token)
 
 	http.SetCookie(w, &cookie)
 

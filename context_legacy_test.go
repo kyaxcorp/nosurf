@@ -46,7 +46,7 @@ func TestSetsTokenCorrectly(t *testing.T) {
 
 	got := contextMap[req].token
 
-	if !bytes.Equal(token, unmaskToken(decodeData(got))) {
+	if !bytes.Equal(token, unmaskToken(DecodeData(got))) {
 		t.Errorf("Token set incorrectly: expected %v, got %v", token, got)
 	}
 }
@@ -63,7 +63,7 @@ func TestGetsTokenCorrectly(t *testing.T) {
 	ctxSetToken(req, intended)
 
 	token = Token(req)
-	decToken := unmaskToken(decodeData(token))
+	decToken := unmaskToken(DecodeData(token))
 	if !bytes.Equal(intended, decToken) {
 		t.Errorf("Token has been set to %v, but it's %v", intended, token)
 	}

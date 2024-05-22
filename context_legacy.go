@@ -75,7 +75,7 @@ func ctxSetToken(req *http.Request, token []byte) *http.Request {
 		contextMap[req] = ctx
 	}
 
-	ctx.token = encodeData(maskToken(token))
+	ctx.token = EncodeData(maskToken(token))
 
 	return req
 }
