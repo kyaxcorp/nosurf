@@ -210,7 +210,7 @@ func (h *CSRFHandler) setTokenCookie(w http.ResponseWriter, r *http.Request, tok
 	cookie := h.baseCookie
 	cookie.Name = h.getCookieName()
 	log.Println("setTokenCookie", token, EncodeData(token), len(EncodeData(token)))
-	cookie.Value = EncodeData(token)
+	cookie.Value = EncodeData(maskToken(token))
 
 	http.SetCookie(w, &cookie)
 
